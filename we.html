@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <input type="text" id="location" placeholder="Enter location">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weather-result"></div>
+    </div>
+    
+    <script>
+        async function getWeather() {
+            const location = document.getElementById('location').value;
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
+            
+            const apiKey = 'cbe3baf8803c4e61a4a151342251302';
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                document.getElementById('weather-result').innerHTML = `
+                    <h2>${data.location.name}, ${data.location.country}</h2>
+                    <h3>${data.current.temp_c}°C</h3>
+                    <p>${data.current.condition.text}</p>
+                    <img src="${data.current.condition.icon}" alt="Weather Icon">
+                `;
+            } catch (error) {
+                alert('Error fetching weather data');
+            }
+        }
+    </script>
+</body>
+</html>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    input {
+        padding: 10px;
+        border: 2px solid #4facfe;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    button {
+        background: #4facfe;
+        color: rgb(246, 244, 244);
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover {
+        background: #00c6fb;
+    }
+    #weather-result {
+        margin-top: 20px;
+    }
+    h2, h3, p {
+        margin: 5px 0;
+    }
+</style>
